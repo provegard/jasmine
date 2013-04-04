@@ -269,8 +269,11 @@
 
   // TODO: move this to closure
   jasmine.Env.prototype.describe = function(description, specDefinitions) {
-    var suite = this.suiteFactory(description, specDefinitions);
+    var suite = this.suiteFactory(description, null);
+    return this.describe_(suite, specDefinitions);
+  };
 
+  jasmine.Env.prototype.describe_ = function(suite, specDefinitions) {
     var parentSuite = this.currentSuite;
     parentSuite.addSuite(suite);
     this.currentSuite = suite;
@@ -300,11 +303,16 @@
     return suite;
   };
 
-  // TODO: move this to closure
-  jasmine.Env.prototype.it = function(description, fn) {
+  jasmine.Env.prototype.it_ = function(description, fn, exclusive) {
     var spec = this.specFactory(description, fn, this.currentSuite);
+    spec.exclusive_ = exclusive;
     this.currentSuite.addSpec(spec);
     return spec;
+  };
+
+  // TODO: move this to closure
+  jasmine.Env.prototype.it = function(description, fn) {
+    return this.it_(description, fn, 0);
   };
 
   // TODO: move this to closure
@@ -312,6 +320,17 @@
     var spec = this.it(description, fn);
     spec.pend();
     return spec;
+  };
+
+  jasmine.Env.prototype.ddescribe = function(description, specDefinitions) {
+    var suite = this.suiteFactory(description, null);
+    suite.exclusive_ = 1;
+
+    return this.describe_(suite, specDefinitions);
+  };
+
+  jasmine.Env.prototype.iit = function(description, fn) {
+    return this.it_(description, fn, 2);
   };
 
   // TODO: move this to closure

@@ -14,6 +14,7 @@ jasmine.Spec = function(attrs) {
   this.expectationResultFactory = attrs.expectationResultFactory || function() { };
   this.queueRunner = attrs.queueRunner || function() {};
   this.catchingExceptions = attrs.catchingExceptions || function() { return true; };
+  this.exclusive_ = 0;
 
   if (!this.fn) {
     this.pend();
