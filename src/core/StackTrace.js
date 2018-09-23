@@ -44,7 +44,7 @@ getJasmineRequireObj().StackTrace = function(j$) {
         if (!overallMatch) { return null; }
 
         fileLineColMatch = overallMatch[pattern.fileLineColIx].match(
-          /^(.*):(\d+):\d+$/);
+          /^(.*?):(\d+)(:\d+)?$/);
         if (!fileLineColMatch) { return null; }
 
         style = style || pattern.style;

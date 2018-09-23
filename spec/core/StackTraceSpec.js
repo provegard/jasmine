@@ -1,4 +1,37 @@
 describe("StackTrace", function() {
+
+  it("understands traces without column number (Nashorn)", function() {
+    var error = {
+      message: 'nope',
+      stack:
+        'Error: nope\n' +
+        '        at c (file:/c:/temp/nashorn/other.js:2)\n' +
+        '        at <program> (script.js:14)'
+    };
+
+    var result = new jasmineUnderTest.StackTrace(error);
+
+    expect(result.message).toEqual('Error: nope');
+    // Note: Apart from the missing column number, the format matches v8,
+    // and since file-line-column extraction isn't part of the style pattern,
+    // there cannot be a separate style in this case.
+    expect(result.style).toEqual('v8');
+    expect(result.frames).toEqual([
+      {
+        raw: '        at c (file:/c:/temp/nashorn/other.js:2)',
+        func: 'c',
+        file: 'file:/c:/temp/nashorn/other.js',
+        line: 2
+      },
+      {
+        raw: '        at <program> (script.js:14)',
+        func: '<program>',
+        file: 'script.js',
+        line: 14
+      }
+    ]);
+  });
+
   it("understands Chrome/IE/Edge style traces", function() {
     var error = {
       message: 'nope',
